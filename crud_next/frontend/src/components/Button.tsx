@@ -5,6 +5,7 @@ interface ButtonProps {
   color?: string;
   className?: string;
   onClick?: () => void;
+  type?: () =>void;
 }
 // jocqjfjqo-fjwjf-owej-ofjwjgf0jgi0jwrijgieqj
 const Button: React.FC<ButtonProps> = ({ text, color = "bg-blue-700", className = "", onClick }) => {

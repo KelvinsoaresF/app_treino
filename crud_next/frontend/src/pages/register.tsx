@@ -16,7 +16,7 @@ const Register = () => {
       e.preventDefault()
 
       try {
-        const response = await axios.post("http://localhost/seu-projeto-backend/register.php", {
+        const response = await axios.post("http://localhost/crud/register", {
           name,
           email,
           password
