@@ -1,9 +1,10 @@
 import { jwtDecode } from "jwt-decode";
 
-const getUser = () => {
+export const getUser = () => {
     const token = localStorage.getItem("token")
     try {
-        const decode = jwtDecode(token)
+        const decoded = jwtDecode(token)
+        return decoded.data
     } catch(err) {
         return null
     }
