@@ -13,7 +13,7 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = trim(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), "/");
 
-        // var_dump($method, $uri, $this->routes);
+        
 
         if (isset($this->routes[$method][$uri])) {
             $data = json_decode(file_get_contents("php://input"), true);
