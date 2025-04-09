@@ -20,24 +20,15 @@ class AuthController {
                 return json_encode(["message" => "Email ja cadastrado"]);
             }
 
-            $user = [
-                "name" => $data['name'],
-                "email" => $data['email'],
-                "password" => password_hash($data['password'], PASSWORD_BCRYPT)
-            ];
-
-            $this->user->name = $user['name'];
-            $this->user->email = $user['email'];
-            $this->user->name = $user['password'];
+            $this->user->name = $data['name'];
+            $this->user->email = $data['email'];
+            $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             // Verifique o hash gerado
-            var_dump("Hash gerado durante o registro: " . $this->user->password . "'");
+            var_dump("Hash gerado durante o registro: '" . $this->user->password . "'");
     
             if ($this->user->create()) {
-                return json_encode([
-                    "message"  => "Usuario criado com sucesso",
-                    "user" => $user
-                ]);
+                return json_encode(["message"  => "Usuario criado com sucesso"]);
             } else {
                 return json_encode(["error" => "Erro ao criar usuario"]);
             }
@@ -67,14 +58,12 @@ class AuthController {
                 $token = JWT_helper::generateToken($userData['id'], $userData['name'], $userData['email']);
                 return json_encode([
                     "message" => "Login realizado com sucesso",
-                    "token" => $token,
-                    "user" => $userData
+                    "token" => $token
                 ]);
             }  else {
                 http_response_code(404);
                 return json_encode(["error" => "Usuário não encontrado"]);
             }
-
         } catch (\Throwable $e) {
             http_response_code(500);
             return json_encode([
