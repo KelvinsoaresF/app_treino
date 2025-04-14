@@ -1,0 +1,18 @@
+ $checkStmt = $this->db->prepare("SELECT id FROM tokens WHERE user_id = :user_id");
+            $checkStmt->bindParam(':user_id', $user_id);
+            $checkStmt->execute();
+    
+            if ($checkStmt->rowCount() > 0) {
+                $stmt = $this->db->prepare("UPDATE tokens SET token = :token WHERE user_id = :user_id");
+            } else {
+                $stmt = $this->db->prepare("INSERT INTO tokens (user_id, token) VALUES (:user_id, :token)");
+            }
+    
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':token', $token);
+    
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                throw new Exception("Falha ao salvar token no banco de dados");
+            }

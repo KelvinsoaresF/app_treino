@@ -3,3 +3,5 @@
   "email": "kevin@gmail.com",
   "password": 1234
 }
+
+Servidor = php -S localhost:8000

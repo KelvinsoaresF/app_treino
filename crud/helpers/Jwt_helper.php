@@ -1,18 +1,19 @@
 <?php 
 
 require_once 'vendor/autoload.php';  
-require_once './crud/config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class JWT_helper {
-    private $db;
+    private $conn;
+
     private static $key = "chave_secreta";
 
-    public function __construct() {
-        $database = new Database;
-        $this->db = $database->connect(); 
+    public function __construct($db) {
+       
+        $this->conn = $db; 
     }
 
     public static function generateToken($user_id, $name, $email) {
@@ -34,23 +35,38 @@ class JWT_helper {
     public function validateToken($token) {
         try {
             return JWT::decode($token, new Key(self::$key, 'HS256'));
+            return true;
         } catch (Exception $e) {
             return false;
         }
+    }  
+
+    public static function decodeToken($token)
+    {
+        return JWT::decode($token, new Key(self::$key, 'HS256'));
     }
 
-    public static function saveToken()
+    public function saveToken($user_id, $token) 
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO tokens (user_id, token) VALUES (:user_id, :token)");
+            $this->conn->query("USE crud");
+            $query = "INSERT INTO tokens (user_id, token) VALUES (:user_id, :token)";
+            $stmt = $this->conn->prepare($query);
+
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':token', $token);
-            return $stmt->execute();
-        } catch (\Exception $e) {
-            return ([
-                false,
-                "error" => $e->getMessage()
-            ]);
+
+            if ($stmt->execute()) {
+                http_response_code(201);
+                return json_encode(["success" => "Toekn salvo com sucesso"]);
+            } else {
+                http_response_code(500);
+                return json_encode(["error" => "Erro ao salvar token"]);
+            }
+
+        } catch (PDOException $e) {
+            return json_encode(["error" => "Erro no banco de dados", "details" => $e->getMessage()]);
         }
     }
+
 }

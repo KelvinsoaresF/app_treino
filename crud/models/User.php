@@ -1,6 +1,5 @@
 <?php
-class User
-{
+class User {
     private $conn;
 
     public $id;
@@ -21,9 +20,6 @@ class User
             $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
             $stmt = $this->conn->prepare($query);
     
-            // Gera o hash da senha
-        
-    
             $stmt->bindParam(':name', $this->name);
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':password', $this->password);
@@ -35,6 +31,7 @@ class User
                 http_response_code(500);
                 return json_encode(["error" => "Erro ao criar usuário"]);
             }
+            
         } catch (PDOException $e) {
             return json_encode(["error" => "Erro no banco de dados", "details" => $e->getMessage()]);
         }
@@ -52,21 +49,33 @@ class User
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if ($user) {
-                return $user; // Retorna os dados do usuário
+                return $user; 
 
             } else {
-                return null; // Retorna null se o usuário não for encontrado
+                return null; 
             }
         } catch (PDOException $e) {
             throw new Exception("Erro no banco de dados: " . $e->getMessage());
         }
     }
 
-    public function emailExists($email) {
+    public function findById($id) 
+    {
         $this->conn->query("USE crud");
-        $query = "SELECT id FROM users WHERE email = :email";  // Corrigido de :emal para :email
+
+        $query = "SELECT id, name, email FROM users WHERE id = :id";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);  // Corrigido aqui também
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    }
+
+    public function emailExists($email) 
+    {
+        $this->conn->query("USE crud");
+
+        $query = "SELECT id FROM users WHERE email = :email";  
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);  
         $stmt->execute();
     
         return $stmt->fetch(PDO::FETCH_ASSOC); 

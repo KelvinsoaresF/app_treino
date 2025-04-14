@@ -6,11 +6,13 @@ require_once __DIR__ . "/../helpers/Jwt_helper.php";
 class AuthController {
     private $db;
     private $user;
+    private $JWT;
 
     public function __construct() {
         $database = new Database();
         $this->db = $database->connect();
         $this->user = new User($this->db);
+        $this->JWT = new JWT_helper($this->db);
     }
 
     public function register($data) {
@@ -24,7 +26,6 @@ class AuthController {
             $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             
-    
             if ($this->user->create()) {
                 $user = [
                     "name" => $this->user->name,
@@ -61,14 +62,24 @@ class AuthController {
 
             if ($userData && password_verify($this->user->password, $userData['password'])) {
                 $token = JWT_helper::generateToken($userData['id'], $userData['name'], $userData['email']);
-                JWT_helper::saveToken($userData['id'], $token);
-                
-                return([
-                    "message" => "Login realizado com sucesso",
-                    "token" => $token,
-                    "user" => $userData
-                ]);
 
+                if($this->JWT->saveToken($userData['id'], $token)) {
+                    return ([
+                        "message" => "login realizado com sucesso",
+                        "token" => $token,
+                        "user" => [
+                            "id" => $userData['id'],
+                            "name" => $userData['name'],
+                            "email" => $userData['email'],
+                        ]
+                    ]);
+                } else {
+                    http_response_code(500);
+                    return ([
+                        "error" => "falha ao salvar token"
+                    ]);
+                }
+                
             }  else {
                 http_response_code(404);
                 return ([
@@ -84,6 +95,11 @@ class AuthController {
                 "line" => $e->getLine()
             ]);
         }
+    }
+
+    public function logout()
+    {
+        
     }
 }
 ?>
