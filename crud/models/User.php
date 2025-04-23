@@ -10,6 +10,7 @@ class User {
     public function __construct($db)
     {
         $this->conn = $db;
+        // $this->conn = $db->getConnction();
     }
 
     public function create()
@@ -63,10 +64,12 @@ class User {
     {
         $this->conn->query("USE crud");
 
-        $query = "SELECT id, name, email FROM users WHERE id = :id";
+        $query = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
 
     public function emailExists($email) 

@@ -2,6 +2,15 @@
   "name": "kevin",
   "email": "kevin@gmail.com",
   "password": 1234
+
+  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJsb2NhbGhvc3QiLCJpYXQiOjE3NDQ1OTk5NzYsImRhdGEiOnsiaWQiOjcsIm5hbWUiOiJrZXZpbiIsImVtYWlsIjoia2V2aW5AZ21haWwuY29tIn19.8smi__4lKxUHwC2XUN21iu-v4gK7HpZwO0v8KWRLqWs
+}
+
+{
+  "name": "treino 1",
+  "day": "segunda",
+  "start": 19:00,
+  "end": 21:00
 }
 
 Servidor = php -S localhost:8000

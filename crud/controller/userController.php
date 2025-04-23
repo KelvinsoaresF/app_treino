@@ -11,7 +11,7 @@ class UserController {
     public function __construct() 
     {
         $database = new Database();
-        $this->db = $database;
+        $this->db = $database->connect();
         $this->user = new User($this->db);
     }
     
@@ -43,6 +43,21 @@ class UserController {
                 "error" => $e->getMessage()
             ]);
         }
+    }
+
+    public function myTraining()
+    {
+        $headers = getallheaders();
+
+        if(!isset($headers['Authorization'])) {
+            http_response_code(401);
+            return ([
+                'message' => 'token não recebido'
+            ]);
+            exit;
+        }
+
+        
     }
 
 }
