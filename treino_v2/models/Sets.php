@@ -14,7 +14,7 @@ class Sets{
 
     public function setsByExercise($exercise_id)
     {
-        $this->conn->query("USE crud");
+        $this->conn->query("USE treino");
         $query = "SELECT * FROM sets WHERE exercise_id = :exercise_id";
         $stmt = $this->conn->prepare($query); 
         $stmt->bindParam(':exercise_id', $exercise_id);

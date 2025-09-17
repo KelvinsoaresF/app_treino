@@ -16,7 +16,7 @@ class Exercise {
 
     public function getExerciciesByTraining($training_day_id)
     {
-        $this->conn->query("USE crud");
+        $this->conn->query("USE treino");
         $query = "SELECT * FROM exercises WHERE training_day_id = :training_day_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':training_day_id', $training_day_id);

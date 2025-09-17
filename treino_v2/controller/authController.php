@@ -23,6 +23,7 @@ class AuthController {
 
             $this->user->name = $data['name'];
             $this->user->email = $data['email'];
+            $this->user->role = $data['role'];
             $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             

@@ -4,6 +4,7 @@ class User {
 
     public $id;
     public $name;
+    public $role;
     public $email;
     public $password;
 
@@ -16,12 +17,13 @@ class User {
     public function create()
     {
         try {
-            $this->conn->query("USE crud");
+            $this->conn->query("USE treino");
     
-            $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+            $query = "INSERT INTO users (name, role, email, password) VALUES (:name, :role; :email, :password)";
             $stmt = $this->conn->prepare($query);
     
             $stmt->bindParam(':name', $this->name);
+            $stmt->bindParam(':role', $this->role);
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':password', $this->password);
     
@@ -42,7 +44,7 @@ class User {
         try {
             $this->conn->query("USE crud");
     
-            $query = "SELECT id, name, email, password FROM users WHERE email = :email LIMIT 1";
+            $query = "SELECT id, name, role, email, password, role FROM users WHERE email = :email LIMIT 1";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':email', $this->email);
             $stmt->execute();
@@ -62,7 +64,7 @@ class User {
 
     public function findById($id) 
     {
-        $this->conn->query("USE crud");
+        $this->conn->query("USE treino");
 
         $query = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->conn->prepare($query);
@@ -74,7 +76,7 @@ class User {
 
     public function emailExists($email) 
     {
-        $this->conn->query("USE crud");
+        $this->conn->query("USE treino");
 
         $query = "SELECT id FROM users WHERE email = :email";  
         $stmt = $this->conn->prepare($query);

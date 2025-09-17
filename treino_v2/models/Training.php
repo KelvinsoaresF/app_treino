@@ -23,7 +23,7 @@ class Training {
     public function index($user_id)
     {
         try {
-            $this->conn->query("USE crud");
+            $this->conn->query("USE treino");
 
             $query = "SELECT * FROM training_days WHERE user_id = :user_id";
             $stmt = $this->conn->prepare($query);

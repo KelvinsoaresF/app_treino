@@ -1,11 +1,12 @@
-<?php 
+<?php
 
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Training.php';
 require_once __DIR__ . '/../helpers/Jwt_helper.php';
 
-class trainingController {
+class trainingController
+{
     private $db;
     private $user;
     private $training;
@@ -17,13 +18,12 @@ class trainingController {
         $this->db = $database->connect();
         $this->training = new Training($this->db);
         $this->user = new User($this->db);
-        
     }
 
     public function index()
     {
         $headers = getallheaders();
-        if(!isset($headers['Authorization'])) {
+        if (!isset($headers['Authorization'])) {
             http_response_code(401);
             return ([
                 'message' => 'token não recebido'
@@ -37,18 +37,17 @@ class trainingController {
             $decoded = JWT_helper::decodeToken($token);
             $user_id = $decoded->data->id;
 
-           $trainings = $this->training->index($user_id);
+            $trainings = $this->training->index($user_id);
             return ([
                 "message" => "treinos buscados",
                 "trainings" => $trainings
             ]);
-            
         } catch (\Throwable $e) {
             return ([
                 "error" => "Erro inesperado",
-                "details" => $e->getMessage(),  
-                "file" => $e->getFile(),        
-                "line" => $e->getLine()         
+                "details" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine()
             ]);
         }
     }
@@ -58,13 +57,13 @@ class trainingController {
         try {
             $training = $this->training->show($id);
 
-            if(!$training) {
+            if (!$training) {
                 return ([
                     'error' => 'treino não encontrado',
                 ]);
             }
 
-            if($training){
+            if ($training) {
                 return ([
                     'message' => 'treino buscado',
                     'treino' => $training
@@ -77,17 +76,17 @@ class trainingController {
         } catch (\Throwable $e) {
             return ([
                 "error" => "Erro inesperado",
-                "details" => $e->getMessage(),  
-                "file" => $e->getFile(),        
-                "line" => $e->getLine()         
+                "details" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine()
             ]);
         }
     }
 
-    public function create($data) 
+    public function create($data)
     {
         $headers = getallheaders();
-        if(!isset($headers['Authorization'])) {
+        if (!isset($headers['Authorization'])) {
             http_response_code(401);
             return ([
                 'message' => 'token não recebido'
@@ -107,7 +106,7 @@ class trainingController {
             $this->training->start = $data['start'];
             $this->training->end = $data['end'];
 
-            if($this->training->create()){
+            if ($this->training->create()) {
                 $training = [
                     "name" => $this->training->name,
                     "day" => $this->training->day,
@@ -122,19 +121,16 @@ class trainingController {
                 ]);
             } else {
                 return ([
-                     "error" => "Erro ao criar usuario"
+                    "error" => "Erro ao criar treino"
                 ]);
             }
-
         } catch (\Exception $e) {
             return json_encode([
                 "error" => "Erro inesperado",
-                "details" => $e->getMessage(),  
-                "file" => $e->getFile(),        
-                "line" => $e->getLine()         
+                "details" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine()
             ]);
         }
     }
 }
-
-?>
